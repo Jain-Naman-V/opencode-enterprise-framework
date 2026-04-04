@@ -1,0 +1,47 @@
+# Environment variables (keep these secret!)
+.env
+.env.local
+.env.*.local
+
+# Credentials files - uncomment to exclude
+# opencode.secrets.json
+*secret*.json
+*_key.json
+*credentials*.json
+*.bak
+
+# Dependencies
+node_modules/
+bun.lockb
+
+# Local config overrides
+opencode.json.local
+tui.json.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Cache
+.cache/
+*.cache
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Code review graph
+.code-review-graph/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

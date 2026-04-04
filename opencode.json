@@ -1,0 +1,207 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "longcat/LongCat-Flash-Chat",
+  "small_model": "longcat/LongCat-Flash-Lite",
+  "autoupdate": true,
+  "share": "manual",
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "reserved": 10000
+  },
+  "snapshot": true,
+  "mcp": {
+    "canva-dev": {
+      "type": "local",
+      "command": ["npx", "-y", "@canva/cli@latest", "mcp"],
+      "enabled": true
+    },
+    "stitch": {
+      "type": "remote",
+      "url": "https://stitch.googleapis.com/mcp",
+      "headers": {
+        "Accept": "application/json",
+        "X-Goog-Api-Key": "{env:STITCH_API_KEY}"
+      },
+      "enabled": true
+    },
+    "code-review-graph": {
+      "type": "local",
+      "command": ["{file:/home/naman/.local/bin/uvx}", "code-review-graph", "serve"],
+      "enabled": true
+    }
+  },
+  "provider": {
+    "longcat": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "LongCat",
+      "options": {
+        "baseURL": "https://api.longcat.chat/openai"
+      },
+      "models": {
+        "LongCat-Flash-Chat": { "name": "LongCat Flash Chat" },
+        "LongCat-Flash-Thinking": { "name": "LongCat Flash Thinking" },
+        "LongCat-Flash-Thinking-2601": { "name": "LongCat Flash Thinking 2601" },
+        "LongCat-Flash-Lite": { "name": "LongCat Flash Lite" }
+      }
+    },
+    "clod": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Clod",
+      "options": {
+        "baseURL": "https://api.clod.io/v1"
+      },
+      "models": {
+        "Trinity Mini": { "name": "Trinity Mini" },
+        "DeepSeek V3": { "name": "DeepSeek V3" },
+        "Llama 3.1 8B": { "name": "Llama 3.1 8B" },
+        "Kimi K2 Instruct": { "name": "Kimi K2 Instruct" },
+        "GLM 4.5 Air": { "name": "GLM 4.5 Air" }
+      }
+    },
+    "mistral": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Mistral",
+      "options": {
+        "baseURL": "https://api.mistral.ai/v1"
+      },
+      "models": {
+        "mistral-small-latest": { "name": "Mistral Small" },
+        "mistral-medium-latest": { "name": "Mistral Medium" },
+        "mistral-large-latest": { "name": "Mistral Large" }
+      }
+    }
+  },
+  "agent": {
+    "code-reviewer": {
+      "description": "Reviews code for best practices, security issues, and potential bugs",
+      "mode": "subagent",
+      "prompt": "You are a code reviewer focused on quality and security. Review code thoroughly and provide constructive feedback without making direct changes.",
+      "permission": {
+        "write": "deny",
+        "edit": "deny"
+      },
+      "temperature": 0.1
+    },
+    "security-auditor": {
+      "description": "Performs security audits and identifies vulnerabilities in code",
+      "mode": "subagent",
+      "prompt": "You are a security expert. Focus on identifying potential security issues including: input validation vulnerabilities, authentication/authorization flaws, data exposure risks, dependency vulnerabilities, and configuration security problems.",
+      "permission": {
+        "write": "deny",
+        "edit": "deny",
+        "bash": "deny"
+      },
+      "temperature": 0.1
+    },
+    "docs-writer": {
+      "description": "Creates and maintains project documentation",
+      "mode": "subagent",
+      "prompt": "You are a technical writer. Create clear, comprehensive documentation focusing on clear explanations, proper structure, code examples, and user-friendly language.",
+      "permission": {
+        "write": "allow",
+        "edit": "allow",
+        "bash": "deny"
+      }
+    },
+    "debugger": {
+      "description": "Helps debug issues and investigate problems",
+      "mode": "subagent",
+      "prompt": "You are a debugging specialist. Investigate issues thoroughly by examining code, running commands, and analyzing errors. Focus on finding root causes and suggesting fixes.",
+      "permission": {
+        "write": "allow",
+        "edit": "allow",
+        "bash": "allow"
+      }
+    },
+    "refactor": {
+      "description": "Refactors and improves existing code",
+      "mode": "subagent",
+      "prompt": "You are a code refactoring expert. Focus on improving code quality, reducing complexity, improving readability, and following best practices. Make small, incremental changes that can be verified.",
+      "permission": {
+        "write": "allow",
+        "edit": "allow"
+      },
+      "temperature": 0.2
+    }
+  },
+  "command": {
+    "review": {
+      "description": "Review code changes in the current diff",
+      "template": "Review the code changes shown above. Focus on:\n- Code quality and best practices\n- Potential bugs and edge cases\n- Performance implications\n- Security considerations\n- Suggestions for improvements\n\nProvide a thorough review without making direct changes.",
+      "agent": "code-reviewer",
+      "subtask": true
+    },
+    "audit": {
+      "description": "Perform security audit on changed files",
+      "template": "Perform a security audit on the changed files. Look for:\n- Input validation vulnerabilities\n- Authentication and authorization flaws\n- Data exposure risks\n- Dependency vulnerabilities\n- Configuration security issues\n\nReview the git diff and identify any security concerns.",
+      "agent": "security-auditor",
+      "subtask": true
+    },
+    "test": {
+      "description": "Run tests and analyze results",
+      "template": "Run the full test suite and analyze the results.\n\nFocus on:\n- Failed tests and their root causes\n- Suggestions for fixes\n- Any patterns in test failures\n\nUse the bash tool to run tests and analyze output.",
+      "agent": "debugger"
+    },
+    "docs": {
+      "description": "Generate or update documentation",
+      "template": "Create or update documentation for the project. Focus on:\n- Clear explanations\n- Proper structure\n- Code examples\n- API documentation\n\nLook at existing documentation patterns in the project.",
+      "agent": "docs-writer"
+    },
+    "refactor": {
+      "description": "Refactor code for better quality",
+      "template": "Analyze the code and suggest refactoring improvements. Focus on:\n- Reducing complexity\n- Improving readability\n- Following best practices\n- Reducing code duplication\n\nMake small, incremental changes that can be verified with tests.",
+      "agent": "refactor"
+    },
+    "commit": {
+      "description": "Create a commit with descriptive message",
+      "template": "Analyze the current git changes and create a well-structured commit:\n\n1. Review the staged changes: !`git diff --cached`\n2. Review unstaged changes: !`git diff`\n3. Suggest a proper commit message following conventional commits\n4. Stage any untracked files if needed\n\nProvide a clear commit message that describes the changes.",
+      "subtask": true
+    },
+    "pr": {
+      "description": "Create a pull request",
+      "template": "Create a pull request for the current changes:\n\n1. Check current branch: !`git branch --show-current`\n2. Check diff from main: !`git diff main...HEAD`\n3. Review recent commits: !`git log --oneline -5`\n\nSuggest PR title, description, and any reviewers.",
+      "subtask": true
+    },
+    "insights": {
+      "description": "Analyze session insights and patterns",
+      "template": "Analyze the session history and provide insights about:\n- Types of tasks being worked on\n- Common patterns or recurring issues\n- Time spent on different types of work\n- Suggestions for improving workflow",
+      "subtask": true
+    },
+    "explain": {
+      "description": "Explain code in current context",
+      "template": "Explain the code in the current context. Focus on:\n- What the code does\n- How it works\n- Any non-obvious patterns or techniques\n- Potential issues or improvements\n\nProvide clear explanations suitable for developers.",
+      "subtask": true
+    }
+  },
+  "instructions": [
+    "CLAUDE.md",
+    "AGENTS.md"
+  ],
+  "permission": {
+    "edit": "ask",
+    "bash": "ask",
+    "skill": {
+      "*": "allow",
+      "internal-*": "deny",
+      "experimental-*": "ask"
+    }
+  },
+  "watcher": {
+    "ignore": [
+      "node_modules/**",
+      "dist/**",
+      ".git/**",
+      "*.log",
+      "coverage/**",
+      ".code-review-graph/**",
+      "*.db",
+      "*.sqlite"
+    ]
+  },
+  "server": {
+    "port": 4096,
+    "mdns": true
+  },
+  "default_agent": "build"
+}
