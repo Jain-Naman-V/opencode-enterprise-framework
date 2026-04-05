@@ -131,6 +131,122 @@ opencode
 
 ---
 
+## Ruflo Integration (AI Orchestration)
+
+Ruflo is an enterprise AI orchestration platform that adds multi-agent swarm coordination, self-learning memory, and cost optimization to OpenCode.
+
+### Prerequisites
+
+```bash
+# Install Node.js 20+ (required for ruflo)
+# Check: node --version
+
+# Claude Code must be installed (optional but recommended)
+npm install -g @anthropic-ai/claude-code
+```
+
+### Features
+
+| Feature | Description |
+|---------|-------------|
+| **100+ Agents** | Pre-built specialized agents for coding, review, testing, security |
+| **Swarm Coordination** | Run multiple agents in parallel with consensus |
+| **Self-Learning Memory** | HNSW vector search, pattern learning |
+| **Token Optimization** | 30-50% token reduction via compression + caching |
+| **WASM Transforms** | Free instant code transforms (<1ms) |
+
+### Quick Start
+
+```bash
+# Initialize ruflo in your project
+npx ruflo@latest init
+
+# Start MCP server (runs automatically via opencode.json)
+npx ruflo@latest mcp start
+```
+
+### Swarm Workflows
+
+Ruflo MCP tools available in OpenCode:
+
+```javascript
+// Initialize a swarm for complex tasks
+swarm_init({
+  topology: "hierarchical",  // queen → workers pattern
+  maxAgents: 6,              // recommended for coding
+  strategy: "specialized"     // clear agent roles
+})
+
+// Spawn specialized agents
+agent_spawn({ type: "coder", name: "backend-coder" })
+agent_spawn({ type: "tester", name: "tester" })
+
+// Store patterns learned
+memory_store({
+  key: "auth-pattern",
+  value: "JWT refresh implementation",
+  namespace: "patterns"
+})
+
+// Search for similar patterns
+memory_search({ query: "authentication flow", topK: 5 })
+```
+
+### Anti-Drift Configuration
+
+For coding tasks, always use anti-drift settings:
+
+```javascript
+swarm_init({
+  topology: "hierarchical",  // single coordinator enforces alignment
+  maxAgents: 6-8,           // smaller team = less drift
+  strategy: "specialized"     // clear roles, no overlap
+})
+```
+
+### 3-Tier Cost Routing
+
+| Complexity | Handler | Speed | Cost |
+|------------|---------|-------|------|
+| Simple | WASM Transform | <1ms | Free |
+| Medium | Haiku/Sonnet | ~500ms | Low |
+| Complex | Opus + Swarm | 2-5s | High |
+
+### Team Workflow Example
+
+```bash
+# 1. Start OpenCode with ruflo MCP
+opencode
+
+# 2. Use swarm for complex feature
+# In OpenCode, invoke:
+@ruflo swarm_init --topology hierarchical --maxAgents 4
+
+# 3. Route simple tasks to WASM
+# Use ruflo_transform for: var→const, add-types, remove-console
+
+# 4. Store successful patterns
+@ruflo memory_store --key "feature-x" --value "pattern details"
+```
+
+### Key MCP Tools
+
+| Tool | Purpose |
+|------|---------|
+| `swarm_init` | Initialize agent swarm |
+| `agent_spawn` | Spawn specialized agents |
+| `memory_search` | Semantic vector search |
+| `memory_store` | Save learned patterns |
+| `hooks_route` | Intelligent task routing |
+| `ruflo_transform` | WASM code transforms |
+
+### Documentation
+
+- [Ruflo GitHub](https://github.com/ruvnet/ruflo)
+- [Full Documentation](https://github.com/ruvnet/ruflo#readme)
+
+---
+
 ## Team Deployment
 
 ### For New Team Members

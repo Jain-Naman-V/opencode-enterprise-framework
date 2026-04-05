@@ -27,7 +27,12 @@
     },
     "code-review-graph": {
       "type": "local",
-      "command": ["{file:/home/naman/.local/bin/uvx}", "code-review-graph", "serve"],
+      "command": ["uvx", "code-review-graph", "serve"],
+      "enabled": true
+    },
+    "ruflo": {
+      "type": "local",
+      "command": ["npx", "-y", "ruflo@latest", "mcp", "start"],
       "enabled": true
     }
   },

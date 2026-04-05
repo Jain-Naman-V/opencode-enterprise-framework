@@ -12,7 +12,8 @@
 
 - **Multiple AI Providers** - Switch between LongCat, Mistral, Clod, and more
 - **Custom Agents** - Pre-configured agents for code review, security audits, debugging, refactoring, and documentation
-- **MCP Server Support** - Canva Dev, Stitch, and code-review-graph integration
+- **MCP Server Support** - Canva Dev, Stitch, code-review-graph, and Ruflo orchestration
+- **Ruflo Integration** - Multi-agent swarms, self-learning memory, 30-50% token optimization
 - **Team Collaboration** - Shareable config via Git for team-wide consistency
 - **Security First** - API keys managed separately, never committed to repo
 
@@ -120,6 +121,22 @@ export STITCH_API_KEY="your-stitch-key"
 # Provides code analysis and refactoring tools
 ```
 
+### Ruflo (AI Orchestration)
+```bash
+# Auto-starts via MCP when OpenCode runs
+# Provides 100+ agents, swarm coordination, and self-learning
+
+# Key capabilities:
+# - Multi-agent swarms for complex tasks
+# - HNSW vector memory for pattern learning
+# - WASM transforms for free instant edits
+# - 30-50% token optimization
+
+# Use cases:
+npx ruflo@latest hive-mind spawn "Implement user authentication"
+npx ruflo@latest agent spawn -t coder
+```
+
 ---
 
 ## 📁 Project Structure
@@ -134,6 +151,7 @@ export STITCH_API_KEY="your-stitch-key"
 ├── agents/                # Custom agent definitions
 ├── commands/              # Custom slash commands
 ├── skills/                # Agent skill configurations
+├── swarm-workflows/       # Pre-built swarm templates
 └── .gitignore            # Excludes secrets
 ```
 
