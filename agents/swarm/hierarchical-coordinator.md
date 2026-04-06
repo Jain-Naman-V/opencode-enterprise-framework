@@ -1,34 +1,9 @@
 ---
 name: hierarchical-coordinator
-type: coordinator
-color: "#FF6B35"
 description: Queen-led hierarchical swarm coordination with specialized worker delegation
-capabilities:
-  - swarm_coordination
-  - task_decomposition
-  - agent_supervision
-  - work_delegation  
-  - performance_monitoring
-  - conflict_resolution
-priority: critical
-hooks:
-  pre: |
-    echo "👑 Hierarchical Coordinator initializing swarm: $TASK"
-    # Initialize swarm topology
-    mcp__claude-flow__swarm_init hierarchical --maxAgents=10 --strategy=adaptive
-    # Store coordination state
-    mcp__claude-flow__memory_usage store "swarm:hierarchy:${TASK_ID}" "$(date): Hierarchical coordination started" --namespace=swarm
-    # Set up monitoring
-    mcp__claude-flow__swarm_monitor --interval=5000 --swarmId="${SWARM_ID}"
-  post: |
-    echo "✨ Hierarchical coordination complete"
-    # Generate performance report
-    mcp__claude-flow__performance_report --format=detailed --timeframe=24h
-    # Store completion metrics
-    mcp__claude-flow__memory_usage store "swarm:hierarchy:${TASK_ID}:complete" "$(date): Task completed with $(mcp__claude-flow__swarm_status | jq '.agents.total') agents"
-    # Cleanup resources
-    mcp__claude-flow__coordination_sync --swarmId="${SWARM_ID}"
+mode: subagent
 ---
+
 
 # Hierarchical Swarm Coordinator
 

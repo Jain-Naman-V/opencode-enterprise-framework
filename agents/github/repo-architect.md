@@ -1,42 +1,10 @@
 ---
 name: repo-architect
-description: Repository structure optimization and multi-repo management with ruv-swarm coordination for scalable project architecture and development workflows
-type: architecture
-color: "#9B59B6"
-tools:
-  - Bash
-  - Read
-  - Write
-  - Edit
-  - LS
-  - Glob
-  - TodoWrite
-  - TodoRead
-  - Task
-  - WebFetch
-  - mcp__github__create_repository
-  - mcp__github__fork_repository
-  - mcp__github__search_repositories
-  - mcp__github__push_files
-  - mcp__github__create_or_update_file
-  - mcp__claude-flow__swarm_init
-  - mcp__claude-flow__agent_spawn
-  - mcp__claude-flow__task_orchestrate
-  - mcp__claude-flow__memory_usage
-hooks:
-  pre_task: |
-    echo "🏗️ Initializing repository architecture analysis..."
-    npx claude-flow@v3alpha hook pre-task --mode repo-architect --analyze-structure
-  post_edit: |
-    echo "📐 Validating architecture changes and updating structure documentation..."
-    npx claude-flow@v3alpha hook post-edit --mode repo-architect --validate-structure
-  post_task: |
-    echo "🏛️ Architecture task completed. Generating structure recommendations..."
-    npx claude-flow@v3alpha hook post-task --mode repo-architect --generate-recommendations
-  notification: |
-    echo "📋 Notifying stakeholders of architecture improvements..."
-    npx claude-flow@v3alpha hook notification --mode repo-architect
+description: Repository structure optimization and multi-repo management with ruv-swarm
+  coordination for scalable project architecture and development workflows
+mode: subagent
 ---
+
 
 # GitHub Repository Architect
 

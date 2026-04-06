@@ -1,83 +1,10 @@
 ---
 name: release-manager
-description: Automated release coordination and deployment with ruv-swarm orchestration for seamless version management, testing, and deployment across multiple packages
-type: development
-color: "#FF6B35"
-capabilities:
-  - self_learning         # ReasoningBank pattern storage
-  - context_enhancement   # GNN-enhanced search
-  - fast_processing       # Flash Attention
-  - smart_coordination    # Attention-based consensus
-tools:
-  - Bash
-  - Read
-  - Write
-  - Edit
-  - TodoWrite
-  - TodoRead
-  - Task
-  - WebFetch
-  - mcp__github__create_pull_request
-  - mcp__github__merge_pull_request
-  - mcp__github__create_branch
-  - mcp__github__push_files
-  - mcp__github__create_issue
-  - mcp__claude-flow__swarm_init
-  - mcp__claude-flow__agent_spawn
-  - mcp__claude-flow__task_orchestrate
-  - mcp__claude-flow__memory_usage
-  - mcp__agentic-flow__agentdb_pattern_store
-  - mcp__agentic-flow__agentdb_pattern_search
-  - mcp__agentic-flow__agentdb_pattern_stats
-priority: critical
-hooks:
-  pre: |
-    echo "🚀 [Release Manager] starting: $TASK"
-
-    # 1. Learn from past release patterns (ReasoningBank)
-    SIMILAR_RELEASES=$(npx agentdb-cli pattern search "Release v$VERSION_CONTEXT" --k=5 --min-reward=0.8)
-    if [ -n "$SIMILAR_RELEASES" ]; then
-      echo "📚 Found ${SIMILAR_RELEASES} similar successful release patterns"
-      npx agentdb-cli pattern stats "release management" --k=5
-    fi
-
-    # 2. Store task start
-    npx agentdb-cli pattern store \
-      --session-id "release-manager-$AGENT_ID-$(date +%s)" \
-      --task "$TASK" \
-      --input "$RELEASE_CONTEXT" \
-      --status "started"
-
-  post: |
-    echo "✅ [Release Manager] completed: $TASK"
-
-    # 1. Calculate release success metrics
-    REWARD=$(calculate_release_quality "$RELEASE_OUTPUT")
-    SUCCESS=$(validate_release_success "$RELEASE_OUTPUT")
-    TOKENS=$(count_tokens "$RELEASE_OUTPUT")
-    LATENCY=$(measure_latency)
-
-    # 2. Store learning pattern for future releases
-    npx agentdb-cli pattern store \
-      --session-id "release-manager-$AGENT_ID-$(date +%s)" \
-      --task "$TASK" \
-      --input "$RELEASE_CONTEXT" \
-      --output "$RELEASE_OUTPUT" \
-      --reward "$REWARD" \
-      --success "$SUCCESS" \
-      --critique "$RELEASE_CRITIQUE" \
-      --tokens-used "$TOKENS" \
-      --latency-ms "$LATENCY"
-
-    # 3. Train neural patterns for successful releases
-    if [ "$SUCCESS" = "true" ] && [ "$REWARD" -gt "0.9" ]; then
-      echo "🧠 Training neural pattern from successful release"
-      npx claude-flow neural train \
-        --pattern-type "coordination" \
-        --training-data "$RELEASE_OUTPUT" \
-        --epochs 50
-    fi
+description: Automated release coordination and deployment with ruv-swarm orchestration
+  for seamless version management, testing, and deployment across multiple packages
+mode: subagent
 ---
+
 
 # GitHub Release Manager
 

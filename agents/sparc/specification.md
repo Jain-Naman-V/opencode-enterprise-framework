@@ -1,77 +1,9 @@
 ---
 name: specification
-type: analyst
-color: blue
 description: SPARC Specification phase specialist for requirements analysis with self-learning
-capabilities:
-  - requirements_gathering
-  - constraint_analysis
-  - acceptance_criteria
-  - scope_definition
-  - stakeholder_analysis
-  # NEW v3.0.0-alpha.1 capabilities
-  - self_learning
-  - context_enhancement
-  - fast_processing
-  - smart_coordination
-  - pattern_recognition
-priority: high
-sparc_phase: specification
-hooks:
-  pre: |
-    echo "📋 SPARC Specification phase initiated"
-    memory_store "sparc_phase" "specification"
-    memory_store "spec_start_$(date +%s)" "Task: $TASK"
-
-    # 1. Learn from past specification patterns (ReasoningBank)
-    echo "🧠 Searching for similar specification patterns..."
-    SIMILAR_PATTERNS=$(npx claude-flow@alpha memory search-patterns "specification: $TASK" --k=5 --min-reward=0.8 2>/dev/null || echo "")
-    if [ -n "$SIMILAR_PATTERNS" ]; then
-      echo "📚 Found similar specification patterns from past projects"
-      npx claude-flow@alpha memory get-pattern-stats "specification: $TASK" --k=5 2>/dev/null || true
-    fi
-
-    # 2. Store specification session start
-    SESSION_ID="spec-$(date +%s)-$$"
-    echo "SESSION_ID=$SESSION_ID" >> $GITHUB_ENV 2>/dev/null || export SESSION_ID
-    npx claude-flow@alpha memory store-pattern \
-      --session-id "$SESSION_ID" \
-      --task "specification: $TASK" \
-      --input "$TASK" \
-      --status "started" 2>/dev/null || true
-
-  post: |
-    echo "✅ Specification phase complete"
-
-    # 1. Calculate specification quality metrics
-    REWARD=0.85  # Default, should be calculated based on completeness
-    SUCCESS="true"
-    TOKENS_USED=$(echo "$OUTPUT" | wc -w 2>/dev/null || echo "0")
-    LATENCY_MS=$(($(date +%s%3N) - START_TIME))
-
-    # 2. Store learning pattern for future improvement
-    npx claude-flow@alpha memory store-pattern \
-      --session-id "${SESSION_ID:-spec-$(date +%s)}" \
-      --task "specification: $TASK" \
-      --input "$TASK" \
-      --output "$OUTPUT" \
-      --reward "$REWARD" \
-      --success "$SUCCESS" \
-      --critique "Specification completeness and clarity assessment" \
-      --tokens-used "$TOKENS_USED" \
-      --latency-ms "$LATENCY_MS" 2>/dev/null || true
-
-    # 3. Train neural patterns on successful specifications
-    if [ "$SUCCESS" = "true" ] && [ "$REWARD" != "0.85" ]; then
-      echo "🧠 Training neural pattern from specification success"
-      npx claude-flow@alpha neural train \
-        --pattern-type "coordination" \
-        --training-data "specification-success" \
-        --epochs 50 2>/dev/null || true
-    fi
-
-    memory_store "spec_complete_$(date +%s)" "Specification documented with learning"
+mode: subagent
 ---
+
 
 # SPARC Specification Agent
 

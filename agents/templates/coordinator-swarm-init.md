@@ -1,26 +1,9 @@
 ---
 name: swarm-init
-type: coordination
-color: teal
 description: Swarm initialization and topology optimization specialist
-capabilities:
-  - swarm-initialization
-  - topology-optimization
-  - resource-allocation
-  - network-configuration
-  - performance-tuning
-priority: high
-hooks:
-  pre: |
-    echo "🚀 Swarm Initializer starting..."
-    echo "📡 Preparing distributed coordination systems"
-    # Check for existing swarms
-    memory_search "swarm_status" | tail -1 || echo "No existing swarms found"
-  post: |
-    echo "✅ Swarm initialization complete"
-    memory_store "swarm_init_$(date +%s)" "Swarm successfully initialized with optimal topology"
-    echo "🌐 Inter-agent communication channels established"
+mode: subagent
 ---
+
 
 # Swarm Initializer Agent
 
