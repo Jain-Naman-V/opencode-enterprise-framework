@@ -32,7 +32,7 @@
     },
     "ruflo": {
       "type": "local",
-      "command": ["npx", "-y", "ruflo@latest", "mcp", "start"],
+      "command": ["ruflo", "mcp", "start"],
       "enabled": true
     }
   },

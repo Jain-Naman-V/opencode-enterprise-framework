@@ -45,3 +45,7 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+# NPM artifacts (from ruflo install)
+package.json
+package-lock.json

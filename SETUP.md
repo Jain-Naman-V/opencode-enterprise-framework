@@ -141,8 +141,11 @@ Ruflo is an enterprise AI orchestration platform that adds multi-agent swarm coo
 # Install Node.js 20+ (required for ruflo)
 # Check: node --version
 
-# Claude Code must be installed (optional but recommended)
-npm install -g @anthropic-ai/claude-code
+# Install ruflo globally (recommended - faster than npx)
+curl -fsSL https://cdn.jsdelivr.net/gh/ruvnet/ruflo@main/scripts/install.sh | bash -s -- --global --minimal
+
+# Verify installation
+ruflo --version
 ```
 
 ### Features
@@ -159,10 +162,10 @@ npm install -g @anthropic-ai/claude-code
 
 ```bash
 # Initialize ruflo in your project
-npx ruflo@latest init
+ruflo init
 
-# Start MCP server (runs automatically via opencode.json)
-npx ruflo@latest mcp start
+# MCP server starts automatically when OpenCode runs
+# No manual start needed
 ```
 
 ### Swarm Workflows
