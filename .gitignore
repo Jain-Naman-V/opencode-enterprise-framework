@@ -49,3 +49,8 @@ Thumbs.db
 # NPM artifacts (from ruflo install)
 package.json
 package-lock.json
+
+# Claude Flow artifacts (local-only)
+.claude/
+.claude-flow/
+.mcp.json

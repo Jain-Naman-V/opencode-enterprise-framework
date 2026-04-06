@@ -2,6 +2,48 @@
 
 This file provides guidance to OpenCode when working in any project.
 
+## Ruflo Integration (AI Orchestration)
+
+Ruflo MCP is available for advanced workflows. Use natural language to access:
+
+```
+use ruflo to spawn a coder agent
+use ruflo to search memory for "authentication patterns"
+use ruflo tools to initialize a swarm for complex tasks
+```
+
+## Available Skills
+
+Use `/skill <name>` to invoke pre-built skills:
+
+- `/swarm-orchestration` - Multi-agent coordination
+- `/sparc-methodology` - Specification-driven development
+- `/github-workflow-automation` - GitHub Actions automation
+- `/agentdb-vector-search` - Vector memory search
+- `/security-scan` - Security vulnerability scanning
+- `/test-runner` - Test execution and analysis
+- `/git-workflow` - Git workflow automation
+
+## Available Agents
+
+Invoke specialized agents via `@`:
+
+- `@code-reviewer` - Code review without edits
+- `@security-auditor` - Security vulnerability detection
+- `@debugger` - Issue investigation
+- `@docs-writer` - Documentation generation
+- `@refactor` - Code improvement
+
+## Swarm Workflows (Complex Tasks)
+
+For complex multi-file tasks, use ruflo swarms:
+
+```
+use ruflo to initialize a swarm with hierarchical topology
+use ruflo to spawn specialized agents for the task
+use ruflo memory to store learned patterns
+```
+
 ## General Principles
 
 - Be proactive but not surprising - ask before taking significant actions
@@ -24,6 +66,7 @@ This file provides guidance to OpenCode when working in any project.
 - Use the `build` agent mode for implementing features and fixes
 - Switch between agents using the Tab key
 - Use `@agent` to invoke subagents for specialized tasks
+- Use `/skill` for pre-built skill workflows
 
 ## Tool Usage
 

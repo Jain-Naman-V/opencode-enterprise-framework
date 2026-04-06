@@ -1,142 +1,110 @@
 # Claude Code vs OpenCode - Gap Analysis & Enhancement Plan
 
-## 1. Claude Code Architecture Deep Dive
+## Current Status (Updated 2026-04-06)
 
-### 1.1 Prompt Orchestration System
-Claude Code uses a sophisticated layered system prompt architecture:
+### ✅ Implemented from Rufus
 
-- **SystemPrompt Type**: Branded type `readonly string[] & { __brand: 'SystemPrompt' }`
-- **Section-based composition**: Modular sections that can be cached/uncached
-- **Priority layering**:
-  1. Override system prompt (REPLACES all)
-  2. Coordinator system prompt
-  3. Agent system prompt (custom or built-in)
-  4. Custom --system-prompt flag
-  5. Default system prompt
-- **appendSystemPrompt**: Always added at end (except when override set)
-- **Cache management**: `systemPromptSection()` for memoized sections, `DANGEROUS_uncachedSystemPromptSection()` for volatile data
-- **Cache clearing**: On `/clear` and `/compact` commands
-
-### 1.2 Tool Usage Architecture
-Claude Code has 40+ specialized tools across categories:
-
-**Core Tools:**
-- File operations: FileReadTool, FileWriteTool, FileEditTool, GlobTool, GrepTool
-- Terminal: BashTool, PowerShellTool
-- Code intelligence: LSPTool, ToolSearchTool
-- Web: WebFetchTool, WebSearchTool
-- Agent management: TaskCreateTool, TaskGetTool, TaskListTool, TaskStopTool, TaskUpdateTool, TaskOutputTool
-- Team management: TeamCreateTool, TeamDeleteTool
-- Scheduling: ScheduleCronTool (CronCreateTool, CronDeleteTool, CronListTool)
-- MCP integration: MCPTool, ListMcpResourcesTool, ReadMcpResourceTool, McpAuthTool
-- Planning: EnterPlanModeTool, ExitPlanModeTool
-- Special: AgentTool, SkillTool, REPLTool, NotebookEditTool
-
-**Tool Execution Flow:**
-1. Tool permission checking (PermissionMode: 'default', 'auto', 'bypassPermissions', 'plan', 'acceptEdits', 'dontAsk')
-2. Tool validation against schema
-3. Execution with progress tracking
-4. Result storage and budget management
-
-### 1.3 Memory & Context Handling
-- **MEMORY.md**: Project-specific memory loaded on startup
-- **Auto-memory**: Learns build commands, debugging patterns across sessions
-- **System prompt sections**: Cached components for performance
-- **Context compaction**: Automatic summarization when context fills
-- **Token budgeting**: Per-turn and total session budgets
-
-### 1.4 Agent Workflows
-- **Primary agents**: Build, Plan - selectable via Tab key
-- **Subagents**: General (multi-step tasks), Explore (read-only exploration)
-- **Custom agents**: Defined via JSON or markdown files
-- **Agent spawning**: Task tool can spawn subagents
-- **Permission inheritance**: Subagents inherit parent permissions with overrides
-
-### 1.5 Safety & Guardrails
-- **Permission modes**: Multiple enforcement levels
-- **Permission rules**: Pattern-based allow/deny/ask
-- **Tool result budget**: Prevents huge outputs from consuming context
-- **Auto-compaction**: Prevents context overflow
-- **Session state validation**: Prevents corrupted state
-
-### 1.6 Key Design Patterns
-
-1. **Feature flags**: `feature('FEATURE_NAME')` for conditional code loading
-2. **Lazy requires**: Break circular dependencies, dead code elimination
-3. **Type branding**: Prevent type confusion errors
-4. **Section caching**: Performance optimization for expensive computations
-5. **Permission layering**: User → Project → Local precedence
-6. **Tool permission context**: Runtime permission evaluation per tool
+| Component | Before | After |
+|-----------|--------|-------|
+| Skills | 3 | 32 |
+| Agents | 4 | 23 |
+| Commands | 4 | 7 |
+| MCP | 3 servers | 4 (with ruflo) |
+| Swarm | ❌ | ✅ via ruflo |
+| Memory | ❌ | ✅ via ruflo |
 
 ---
 
-## 2. Gap Analysis: OpenCode vs Claude Code
+## 1. OpenCode + Ruflo: The Complete Stack
 
-### 2.1 Missing Features in OpenCode
+### Advantages Over Claude Code
 
-| Category | Claude Code Feature | OpenCode Status |
-|----------|-------------------|-----------------|
-| **System Prompt** | Section-based modular prompts | Basic instructions array |
-| **Memory** | MEMORY.md + auto-memory | Instructions from files |
-| **Agents** | Built-in + custom + subagents | Basic agent config |
-| **Tasks** | Full task lifecycle management | Limited task support |
-| **Team/Cron** | Team + Cron scheduling | Not found |
-| **MCP** | Full MCP lifecycle | Basic MCP config |
-| **Permissions** | Pattern-based rules | Basic allow/ask/deny |
-| **Compaction** | Auto + reactive + snip | Basic compaction |
-
-### 2.2 Weak Areas in OpenCode
-
-1. **Limited agent customization**: Only basic prompt + tools
-2. **No task orchestration**: Can't spawn subagents for parallel work
-3. **Basic permissions**: No pattern-based bash commands
-4. **No memory system**: No auto-learning across sessions
-5. **Limited command system**: Basic template + description only
-
-### 2.3 Opportunities for Improvement
-
-1. **Enhanced system prompt**: Add section-based architecture
-2. **Memory integration**: Support MEMORY.md + CLAUDE.md patterns
-3. **Advanced permissions**: Pattern matching for bash commands
-4. **Task improvements**: Add task spawning capability
-5. **Better hooks**: Pre/post execution hooks for automation
+| Feature | OpenCode + Ruflo | Claude Code |
+|---------|-----------------|-------------|
+| **Multiple Providers** | ✅ Any LLM | ❌ Claude only |
+| **Team Config** | ✅ Git-shareable | ❌ No |
+| **Swarm Coordination** | ✅ 60+ agents | ❌ No |
+| **Vector Memory** | ✅ HNSW search | ❌ No |
+| **Self-Learning** | ✅ SONA + EWC++ | ❌ No |
+| **Cost Routing** | ✅ 3-tier routing | ❌ No |
+| **Hooks System** | ✅ 27 hooks | ✅ Limited |
 
 ---
 
-## 3. OpenCode Global Setup - Complete Design
+## 2. Imported from Rufus
 
-### 3.1 System Prompt Strategy
+### Skills (32 total)
+- `swarm-orchestration` - Multi-agent coordination
+- `sparc-methodology` - Specification-driven development
+- `github-workflow-automation` - GitHub Actions automation
+- `agentdb-*` (5 skills) - Vector memory management
+- `v3-*` (10 skills) - V3 features
+- Plus original: `git-workflow`, `security-scan`, `test-runner`
 
+### Agents (23 categories)
+- `swarm/*` - Swarm coordination (3 agents)
+- `github/*` - GitHub operations (13 agents)
+- `templates/*` - Reusable templates (9 agents)
+- Plus original: `code-reviewer`, `security-auditor`, `debugger`, `docs-writer`
+
+### Commands (7 total)
+- `/claude-flow-help` - Help system
+- `/claude-flow-memory` - Memory operations
+- `/claude-flow-swarm` - Swarm coordination
+- Plus original: `/commit`, `/explain`, `/opencodevsclaude`, `/test`
+
+---
+
+## 3. How to Use
+
+### Access Rufus MCP:
 ```
-Priority:
-1. CLAUDE.md (project or global)
-2. AGENTS.md (project instructions)
-3. Built-in OpenCode instructions
-4. appendSystemPrompt for session-specific context
+use ruflo to spawn a coder agent
+use ruflo to search memory for "auth patterns"
+use ruflo tools to initialize a swarm
 ```
 
-### 3.2 Tool Definitions
-- Core: read, edit, write, glob, grep, bash
-- Web: webfetch, websearch
-- Productivity: todo, skill
-- Integration: mcp servers
+### Use Skills:
+```
+/swarm-orchestration
+/sparc-methodology
+/github-workflow-automation
+```
 
-### 3.3 Memory System
-- Project: AGENTS.md + CLAUDE.md
-- Global: ~/.config/opencode/CLAUDE.md
-- Skills: ~/.config/opencode/skills/
+### Use Agents:
+```
+@code-reviewer
+@security-auditor
+@hierarchical-coordinator
+```
 
-### 3.4 Agent Workflows
-- Build: Full tool access
-- Plan: Read-only analysis
-- Custom: Specialized subagents
+---
 
-### 3.5 Error Handling
-- Retry logic for API calls
-- Graceful degradation
-- Clear error messages
+## 4. Remaining Gaps
 
-### 3.6 Context Management
-- Compaction on token limit
-- Pruning old tool outputs
-- Reserved token buffer
+### OpenCode-Specific to Implement:
+- [ ] Hooks system (pre/post edit)
+- [ ] Status line integration
+- [ ] Session persistence
+- [ ] Task lifecycle management
+
+### Ruflo Features Available via MCP:
+- [x] Swarm coordination - via `swarm_init`, `swarm_start`
+- [x] Vector memory - via `memory_store`, `memory_search`
+- [x] Agent spawning - via `agent_spawn`
+- [x] Self-learning - via `hooks_intelligence`
+
+---
+
+## 5. Comparison Summary
+
+| Capability | OpenCode Alone | OpenCode + Ruflo | Claude Code |
+|------------|----------------|-------------------|-------------|
+| **Multi-Provider** | ✅ | ✅ | ❌ |
+| **Team Config** | ✅ | ✅ | ❌ |
+| **Swarm** | ❌ | ✅ | ❌ |
+| **Memory** | ❌ | ✅ | ❌ |
+| **Self-Learning** | ❌ | ✅ | ❌ |
+| **Skills** | 3 | 32 | 100+ |
+| **Agents** | 4 | 23 | 60+ |
+| **Cost** | Free | Free | $100+/mo |
